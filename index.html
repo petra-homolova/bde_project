@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    
+    <div class="container">
+      <h1>Todo App</h1>
+
+      <p id="error-messege">Please enter a todo item</p>
+
+      <form class="todo-form">
+        <input type="text" id="todo-input" placeholder="Enter a todo">
+        <select id="priority-dropdown">
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <button type="submit" id="add-todo"> ADD</button>
+      </form>
+
+      
+      
+      
+      <ul class="todo-list" id="todo-list"></ul>   
+
+      <div class="controls">
+        <input type="color" id="colorPicker">
+        
+        <div class="button-container">
+          <button class="main-btn" id="toggle-all-btn">All Completed</button>
+          <button class="main-btn" id="clear-completed-btn">Clear Completed</button>
+        </div>
+      </div>
+      
+
+      
+      <div class="progress-container">
+        <label for="progress-bar">Completion Progress:</label>
+        <progress id="progress-bar" value="0" max="100"></progress>
+        <span id="progress-percentage">0%</span>
+
+      </div>
+
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
