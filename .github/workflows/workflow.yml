@@ -30,7 +30,7 @@ jobs:
           server-dir: test/todo/ # test.petra-homolova.cz/todo/
           local-dir: dist/
 
-      - naem: install TestCafe
+      - name: Install TestCafe
         run: npm install -g testcafe
 
       - name: Update APT
