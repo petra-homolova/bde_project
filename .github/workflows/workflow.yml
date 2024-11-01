@@ -29,3 +29,15 @@ jobs:
           password: ${{secrets.FTP_PASSWORD }}
           server-dir: test/todo/ # test.petra-homolova.cz/todo/
           local-dir: dist/
+
+      - naem: install TestCafe
+        run: npm install -g testcafe
+
+      - name: Update APT
+        run: apt-get update
+
+      - name: Install Chromium
+        run: apt-get install -y chromium
+
+      - name: Run tests
+        run: testcafe chromium:headless test/*
