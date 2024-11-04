@@ -8,6 +8,7 @@ export interface Todo {
   text: string;
   completed: boolean;
   priority: 'Low' | 'Medium' | 'High';
+  dueDate?: string;
 }
 
 // Step 3: Initialize an empty array to store todos
@@ -24,12 +25,13 @@ const priorityDropdown = document.getElementById('priority-dropdown') as HTMLSel
 // Step 5: Function to add a new todo
 // Function to add a new todo: This function creates a new todo object and adds it to the array.
 
-export const addTodo = (text: string, priority: 'Low' | 'Medium' | 'High'): void => {
+export const addTodo = (text: string, priority: 'Low' | 'Medium' | 'High', dueDate?: string): void => {
   const newTodo: Todo = {
     id: Date.now(),
     text: text,
     completed: false,
     priority: priority,
+    dueDate: dueDate
   };
   todos.push(newTodo);
   sortTodos();  
@@ -52,6 +54,10 @@ const renderTodos = (): void => { // void because no return - what we are doing 
       <input type="checkbox" class="toggle-checkbox" ${todo.completed ? 'checked' : ''}>
       <span style="text-decoration: ${todo.completed ? 'line-through' : 'none'};">
         ${todo.text} <span class="priority-label">(${todo.priority})</span> <!-- Display priority -->
+        <span class="due-date" style="display: ${todo.completed ? 'none' : 'block'};">
+        Due: ${todo.dueDate || 'No Due Date'}
+      </span>
+      </span>
       </span>
       </span>
       <button>Remove</button>
@@ -77,15 +83,19 @@ renderTodos(); // Call the renderTodos function to display the initial list of t
 
 // Step 7: Event listener for the form submission
 // Event listener for the form submission: This listener handles the form submission, adds the new todo, and clears the input field.
+const dueDateInput = document.getElementById('due-date') as HTMLInputElement;
+
 todoForm.addEventListener('submit', (event: Event) => {
   event.preventDefault();
   const text = todoInput.value.trim();
   const priority = priorityDropdown.value as 'Low' | 'Medium' | 'High';
+  const dueDate = dueDateInput.value; // Get due date value
 
   if (text !== '') {
-    addTodo(text, priority);
+    addTodo(text, priority, dueDate); // Pass due date to addTodo
     todoInput.value = '';
-    priorityDropdown.value = 'Low'; // Reset dropdown to default
+    priorityDropdown.value = 'Low';
+    dueDateInput.value = ''; // Reset the due date input
   }
 });
 
@@ -241,6 +251,8 @@ if (toggleAllBtn) {
   Priority Levels:
 
 */
+
+
 
 // Option 7: Add a dropdown to set the priority level (e.g., Low, Medium, High) for each todo item.
 // Display the priority level next to each todo item.

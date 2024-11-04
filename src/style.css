@@ -185,3 +185,12 @@ progress::-moz-progress-bar {
   border: 1px solid #ccc;
   border-radius: 3px;
 }
+
+.date{
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  flex: 0 0 50%;
+  margin-top: 10px;
+}
