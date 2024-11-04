@@ -1,7 +1,7 @@
 :root {
   --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --line-height: 1.5;
-  --font-weight: 400;
+  --font-weight: 380;
 
   --color-scheme: light dark;
   --color: rgba(255, 255, 255, 0.87);
@@ -17,7 +17,7 @@
   --container-padding: 20px;
   --container-border-radius: 5px;
   --container-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  --container-width: 420px;
+  --container-width: 400px;
 }
 
 body {
@@ -143,14 +143,12 @@ h1 {
   color: #fff;
   border-radius: 3px;
   cursor: pointer;
-  
 }
 
 .main-btn:hover {
   background:#146c28;
 }
 
-/* Progress Bar */
 .progress-container {
   margin: 20px 0;
   text-align: center;
@@ -176,7 +174,7 @@ progress::-moz-progress-bar {
 
 #progress-percentage {
   font-weight: bold;
-  margin-left: 10px; /* Adds space between the progress bar and the percentage text */
+  margin-left: 10px; 
 }
 
 #priority-dropdown{
@@ -184,4 +182,43 @@ progress::-moz-progress-bar {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
+}
+
+.date{
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  flex: 0 0 50%;
+  margin-top: 10px;
+}
+
+body.dark-mode {
+  background-color: #333;
+  color: #f4f4f4;
+}
+body.dark-mode .container {
+  background-color: #444;
+  color: #f4f4f4;
+}
+body.dark-mode .todo-item {
+  background-color: #555;
+}
+body.dark-mode button {
+  background-color: #666;
+  color: #fff;
+}
+
+.dark-mode{
+  border: none;
+  padding: 7px 8px;
+  background: #000;
+  color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.colors{
+  display: flex;
+  gap: 10px;
 }
