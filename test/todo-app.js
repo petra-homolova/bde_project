@@ -20,25 +20,27 @@ test("Dark mode button", async t => {
 })
 
 test('Date for todo', async t => {
-    const todoForm = Selector('.todo-form');
-    const todoInput = Selector('#todo-input');
-    const dueDateInput = Selector('#due-date');
-    const priorityDropdown = Selector('#priority-dropdown');
-    const todoList = Selector('#todo-list');
+    const todoForm = Selector('.todo-form').with({ visibilityCheck: true });
+    const todoInput = Selector('#todo-input').with({ visibilityCheck: true });
+    const dueDateInput = Selector('#due-date').with({ visibilityCheck: true });
+    const priorityDropdown = Selector('#priority-dropdown').with({ visibilityCheck: true });
+    const todoList = Selector('#todo-list').with({ visibilityCheck: true });
 
     const todoText = 'Test due date todo';
     const dueDate = '2023-12-31';
     const priority = 'Medium';
 
-    // Add a new todo with a due date
+    // Wait for elements to appear before interacting with them
     await t
+        .expect(todoForm.exists).ok('Todo form should be present')
+        .expect(todoInput.exists).ok('Todo input should be present')
+        .expect(dueDateInput.exists).ok('Due date input should be present')
         .typeText(todoInput, todoText)
         .click(priorityDropdown)
-        .click(priorityDropdown.find('option').withText(priority)) // Select Medium priority
-        .typeText(dueDateInput, dueDate) // Set the due date
+        .click(priorityDropdown.find('option').withText(priority))
+        .typeText(dueDateInput, dueDate)
         .click(todoForm.find('button[type="submit"]'));
 
-    // Verify the todo item appears in the list with the correct due date
     const newTodo = todoList.child('li').withText(todoText);
     const dueDateText = newTodo.find('.due-date');
 
