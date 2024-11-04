@@ -281,10 +281,14 @@ const updateProgressBar = (): void => {
   percentageDisplay.textContent = `${Math.round(progressPercentage)}%`; // Update the text to show the percentage
 };
 
-/** 
- DO IT FOR BDE PART
+//Option 11: Add a button to toggle between light and dark modes.
+//Change the app's theme based on the selected mode.
 
-  Option 11: Add a button to toggle between light and dark modes.
-  Change the app's theme based on the selected mode.
+const darkModeToggle = document.getElementById('dark-mode-toggle') as HTMLButtonElement;
 
-*/
+const toggleDarkMode = (): void => {
+  document.body.classList.toggle('dark-mode');
+};
+
+// Add event listener to dark mode toggle button
+darkModeToggle.addEventListener('click', toggleDarkMode);
