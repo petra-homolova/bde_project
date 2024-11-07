@@ -1,7 +1,7 @@
 import {Selector} from "testcafe";
 
 const dueDateInput = Selector('input#due-date'); 
-const dueDate = '2024-11-04'; 
+const dueDate = '2024-11-07'; 
 
 fixture("Todo-app test")
 .page("https://test.petra-homolova.cz/todo/")
@@ -21,10 +21,12 @@ test("Dark mode button", async t => {
 })
 
 test('Date for todo', async t => {
-    await t.wait(1000); 
+    await t.wait(1000);
 
     await t
-        .expect(dueDateInput.exists).ok('Due date input should be present') 
-        .typeText(dueDateInput, dueDate) 
-        .expect(dueDateInput.value).eql(dueDate, 'Due date input should display the correct date'); 
+        .expect(dueDateInput.exists).ok('Due date input should be present');
+
+    await t
+        .typeText(dueDateInput, dueDate)
+        .expect(dueDateInput.value).eql(dueDate, 'Due date input should display the correct date');
 });
