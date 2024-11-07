@@ -2,7 +2,7 @@
 import './style.css';
 
 // Step 2: Define the Todo interface
-// Define the Todo interface: This interface defines the structure of a todo item.
+// To this interface I added a priority and dueDate
 export interface Todo {
   id: number;
   text: string;
@@ -12,18 +12,20 @@ export interface Todo {
 }
 
 // Step 3: Initialize an empty array to store todos
-// Initialize an empty array: This array will store the list of todos.
 export let todos: Todo[] = [];
 
 // Step 4: Get references to the HTML elements
-// Get references to the HTML elements: These references will be used to interact with the DOM
 const todoInput = document.getElementById('todo-input') as HTMLInputElement; 
 const todoForm = document.querySelector('.todo-form') as HTMLFormElement;    
-const todoList = document.getElementById('todo-list') as HTMLUListElement;   
+const todoList = document.getElementById('todo-list') as HTMLUListElement;
+const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;    
 const priorityDropdown = document.getElementById('priority-dropdown') as HTMLSelectElement;
+const dueDateInput = document.getElementById('due-date') as HTMLInputElement;
+const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement;
+const darkModeToggle = document.getElementById('dark-mode-toggle') as HTMLButtonElement;
 
 // Step 5: Function to add a new todo
-// Function to add a new todo: This function creates a new todo object and adds it to the array.
+// I added properties for priority and dueDate
 
 export const addTodo = (text: string, priority: 'Low' | 'Medium' | 'High', dueDate?: string): void => {
   const newTodo: Todo = {
@@ -40,21 +42,21 @@ export const addTodo = (text: string, priority: 'Low' | 'Medium' | 'High', dueDa
 
 
 // Step 6: Function to render the list of todos
-// Function to render the list of todos: This function updates the DOM to display the current list of todos.
-const renderTodos = (): void => { // void because no return - what we are doing is updating the DOM
-  // Clear the current list
+// I added literals for checkbox, completed button, priority level and date
+const renderTodos = (): void => { 
+  
   todoList.innerHTML = '';
 
-  // Iterate over the todos array and create list items for each todo
-  todos.forEach(todo => { // In this specific case, .forEach is more suitable because we are directly modifying the DOM for each todo item.
+  todos.forEach(todo => { 
     const li = document.createElement('li');
-    li.className = 'todo-item'; // Add a class to the list item
-    // Use template literals to create the HTML content for each list item
+    li.className = 'todo-item'; 
+
     li.innerHTML = `
       <input type="checkbox" class="toggle-checkbox" ${todo.completed ? 'checked' : ''}>
       <span style="text-decoration: ${todo.completed ? 'line-through' : 'none'};">
-        ${todo.text} <span class="priority-label">(${todo.priority})</span> <!-- Display priority -->
-        <span class="due-date" style="display: ${todo.completed ? 'none' : 'block'};">
+        ${todo.text} 
+      <span class="priority-label">(${todo.priority})</span> 
+      <span class="due-date" style="display: ${todo.completed ? 'none' : 'block'};">
         Due: ${todo.dueDate || 'No Due Date'}
       </span>
       </span>
@@ -63,81 +65,72 @@ const renderTodos = (): void => { // void because no return - what we are doing 
       <button>Remove</button>
       <button id="editBtn">Edit</button>
     `;
-    // addRemoveButtonListener is further down in the code. We have onclick in the function instead of template literals. More safe to use addEventListener.
     
     addCheckboxListener(li, todo.id);     
-    addRemoveButtonListener(li, todo.id); // Add event listener to the remove button. li is the parent element, and todo.id is the ID of the todo. 
-    addEditButtonListener(li, todo.id); // Add event listener to the remove button. li is the parent element, and todo.id is the ID of the todo. 
-    todoList.appendChild(li); // Append the list item to the ul element
+    addRemoveButtonListener(li, todo.id); 
+    addEditButtonListener(li, todo.id); 
+    todoList.appendChild(li); 
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+    document.getElementById('clear-completed-btn')?.addEventListener('click', clearCompletedTodos);
 
     updateProgressBar();
   });
 };
 
 // Step 6.1: Function to render the list of todos
-// Initial render
-renderTodos(); // Call the renderTodos function to display the initial list of todos : Should be at the end of the code to ensure that the function is defined before it is called.
-// The initial render is important to display the list of todos when the page is first loaded. Without it, the list would be empty until a new todo is added.
-// Move it when code is complete ( refactoring ) 
+renderTodos(); 
 
 
 // Step 7: Event listener for the form submission
-// Event listener for the form submission: This listener handles the form submission, adds the new todo, and clears the input field.
-const dueDateInput = document.getElementById('due-date') as HTMLInputElement;
-
+// I added value for priority and date
 todoForm.addEventListener('submit', (event: Event) => {
   event.preventDefault();
   const text = todoInput.value.trim();
   const priority = priorityDropdown.value as 'Low' | 'Medium' | 'High';
-  const dueDate = dueDateInput.value; // Get due date value
+  const dueDate = dueDateInput.value; 
 
   if (text !== '') {
-    addTodo(text, priority, dueDate); // Pass due date to addTodo
+    addTodo(text, priority, dueDate); 
     todoInput.value = '';
     priorityDropdown.value = 'Low';
-    dueDateInput.value = ''; // Reset the due date input
+    dueDateInput.value = ''; 
   }
 });
 
 
 //Improved code for step 7 - user input validation - move the error message to the top of the Typescript file
-const errorMessage = document.getElementById('error-message') as HTMLParagraphElement; // Should be moved to the top + added to the HTML file
-
 todoForm.addEventListener('submit', (event: Event) => {
-  event.preventDefault(); // Prevent the default form submission behavior
-  const text = todoInput.value.trim(); // Get the value of the input field and remove any leading or trailing whitespace
+  event.preventDefault(); 
+  const text = todoInput.value.trim(); 
   const priority = priorityDropdown.value as 'Low' | 'Medium' | 'High';
 
-  if (text !== '') { // Check if the input field is empty
-    todoInput.classList.remove('input-error'); // Remove the error highlight if present
-    errorMessage.style.display = 'none'; // Hide the error message
-    addTodo(text, priority); // Add the todo item
-    todoInput.value = ''; // Clear the input field
+  if (text !== '') { 
+    todoInput.classList.remove('input-error'); 
+    errorMessage.style.display = 'none'; 
+    addTodo(text, priority); 
+    todoInput.value = ''; 
   } else {
-    console.log("Please enter a todo item"); // Provide feedback to the user
-    todoInput.classList.add('input-error'); // Add a class to highlight the error
-    errorMessage.style.display = 'block'; // Show the error message
+    console.log("Please enter a todo item"); 
+    todoInput.classList.add('input-error'); 
+    errorMessage.style.display = 'block'; 
   }
 });
 
 // Step 8: Function to removes all a todo by ID
-// Function to add event listener to the remove button - this function has an callback function that removes the todo item from the array.
 const addRemoveButtonListener = (li: HTMLLIElement, id: number): void => {
   const removeButton = li.querySelector('button');
-  removeButton?.addEventListener('click', () => removeTodo(id)); // We have an optional chaining operator here to avoid errors if the button is not found - for example, if the button is removed from the DOM.
+  removeButton?.addEventListener('click', () => removeTodo(id)); 
 };
 
 // Step 8: Function to remove a todo by ID
-// Function to remove a todo by ID: This function removes a todo from the array based on its ID.
 export const removeTodo = (id: number): void => {
   todos = todos.filter(todo => todo.id !== id);
-  renderTodos(); // Re-render the updated list of todos
+  renderTodos(); 
 }; 
 
 
 // Edit event listener - make button and add button to each todo
 const addEditButtonListener = (li: HTMLLIElement, id:number) => {
-  // make use of the editBtn id to edit the todo
   const editButton = li.querySelector('#editBtn')
   editButton?.addEventListener('click', () => editTodo(id)) 
 }
@@ -163,7 +156,7 @@ const changeBackgroundColor = (color: string): void => {
 
 // Function to initialize the color picker event listener
 const initializeColorPicker = (): void => {
-  const colorPicker = document.getElementById('colorPicker') as HTMLInputElement; // encapsulate the color picker element to this function
+  const colorPicker = document.getElementById('colorPicker') as HTMLInputElement; 
   if (colorPicker) {
     colorPicker.addEventListener('input', (event: Event) => {
       const target = event.target as HTMLInputElement;
@@ -179,11 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeColorPicker();
 });
 
-//Optional features list: 
+//---------------------------------------------------- OPTIONAL FEATURES -------------------------------------------------------------
 
-// Option 1: Add a button to toggle the completed status of a todo item
-// Function to toggle the completed status of a todo + 
-// Add a button to toggle the completed status of a todo item
+//1. Button to toggle the completed status
 
 // Add event listener for the checkbox to toggle completion status
 const addCheckboxListener = (li: HTMLLIElement, id: number): void => {
@@ -195,15 +186,12 @@ const addCheckboxListener = (li: HTMLLIElement, id: number): void => {
 const toggleTodoCompletion = (id: number, isCompleted: boolean): void => {
   const todo = todos.find(todo => todo.id === id);
   if (todo) {
-    todo.completed = isCompleted; // Set the completion status based on checkbox
-    renderTodos(); // Re-render the updated list of todos
+    todo.completed = isCompleted; 
+    renderTodos(); 
   }
 };
 
-// Option 2: Add a button to clear all completed todos
-// Add a button to clear all completed todos
-// Function to clear all completed todos
-// Add a button to toggle all todos
+// 2. Button to clear all completed todos
 
 // Function to clear all completed todos - NEW FUNCTION
 const clearCompletedTodos = (): void => {
@@ -211,52 +199,25 @@ const clearCompletedTodos = (): void => {
   renderTodos();
 };
 
-// Event listeners for the new buttons - NEW EVENT LISTENERS
-document.getElementById('clear-completed-btn')?.addEventListener('click', clearCompletedTodos);
 
-// Option 3: Add a button to toggle all todos
-// Edit a todo item and update it
-// Add an input field to edit a todo item
-// Save the updated todo item
-// Cancel the editing of a todo item
-// Add a button to cancel the editing of a todo item
+//3. Button to toggle all todos
 
 // Add this function to toggle all todos as completed
 const toggleAllTodos = (): void => {
-  // Check if all todos are completed
   const allCompleted = todos.every(todo => todo.completed);
 
-  // Update the completed status of each todo
   todos.forEach(todo => {
-    todo.completed = !allCompleted; // If all are completed, uncheck them; otherwise, check all
+    todo.completed = !allCompleted; 
   });
 
-  renderTodos(); // Re-render the todo list
+  renderTodos(); 
 };
-
-// Event listener for the toggle button
-const toggleAllBtn = document.getElementById('toggle-all-btn') as HTMLButtonElement;
 
 if (toggleAllBtn) {
   toggleAllBtn.addEventListener('click', toggleAllTodos);
 }
 
-/** 
- DO IT FOR BDE PART
-
-  Option 6: Due Date for Todos:
-  Add a date input field to set a due date for each todo item.
-  Display the due date next to each todo item.
-  Highlight overdue todos.
-  Priority Levels:
-
-*/
-
-
-
-// Option 7: Add a dropdown to set the priority level (e.g., Low, Medium, High) for each todo item.
-// Display the priority level next to each todo item.
-// Sort todos by priority.
+// 4. Dropdown to set the priority level
 
 const sortTodos = (): void => {
   todos.sort((a, b) => {
@@ -265,9 +226,7 @@ const sortTodos = (): void => {
   });
 };
 
-// Option 10: Add a progress bar to show the percentage of completed todos.
-// Update the progress bar as todos are marked as completed or incomplete.
-// Dark Mode Toggle:
+// 5. Progress bar to show the percentage of completed todos
 
 const updateProgressBar = (): void => {
   const completedTodos = todos.filter(todo => todo.completed).length;
@@ -278,17 +237,11 @@ const updateProgressBar = (): void => {
   const percentageDisplay = document.getElementById('progress-percentage') as HTMLSpanElement;
 
   progressBar.value = progressPercentage;
-  percentageDisplay.textContent = `${Math.round(progressPercentage)}%`; // Update the text to show the percentage
+  percentageDisplay.textContent = `${Math.round(progressPercentage)}%`; 
 };
 
-//Option 11: Add a button to toggle between light and dark modes.
-//Change the app's theme based on the selected mode.
-
-const darkModeToggle = document.getElementById('dark-mode-toggle') as HTMLButtonElement;
+//6. Button to change mode
 
 const toggleDarkMode = (): void => {
   document.body.classList.toggle('dark-mode');
 };
-
-// Add event listener to dark mode toggle button
-darkModeToggle.addEventListener('click', toggleDarkMode);
