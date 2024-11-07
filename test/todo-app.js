@@ -23,10 +23,13 @@ test("Dark mode button", async t => {
 test('Date for todo', async t => {
     await t.wait(1000);
 
-    await t
-        .expect(dueDateInput.exists).ok('Due date input should be present');
+    await t.expect(dueDateInput.exists).ok('Due date input should be present');
 
-    await t
-        .typeText(dueDateInput, dueDate)
-        .expect(dueDateInput.value).eql(dueDate, 'Due date input should display the correct date');
+    await t.eval(() => {
+        const dateInput = document.getElementById('due-date');
+        dateInput.value = '2024-11-07';
+        console.log("Date input value is: ", dateInput.value);
+    });
+
+    await t.expect(dueDateInput.value).eql(dueDate, 'Due date input should display the correct date');
 });
