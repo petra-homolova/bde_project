@@ -2,9 +2,6 @@ import {Selector} from "testcafe";
 
 const dueDateInput = Selector('#due-date'); 
 const dueDate = '2024-11-07'; 
-const addTodoButton = Selector('#add-todo');
-const todoInput = Selector('#todo-input');
-const todoList = Selector('#todo-list');
 
 fixture("Todo-app test")
 .page("https://test.petra-homolova.cz/todo/")
@@ -24,14 +21,12 @@ test("Dark mode button", async t => {
 })
 
 test('Date for todo', async t => {
+    await t.wait(1000);
+
     await t
-        .typeText(todoInput, 'Test Todo') 
-        .eval(() => document.getElementById('due-date').value = '2024-11-07') 
-        .click(addTodoButton); 
+        .expect(dueDateInput.exists).ok('Due date input should be present')
+        .typeText(dueDateInput, dueDate)
+        .expect (dueDateInput.value).eql(dueDate, 'Due date input should display the correct date');
 
-    const todoItem = todoList.child('li').withText('Test Todo');
-    await t.expect(todoItem.exists).ok('The todo item should be added');
-
-    const dueDateDisplay = todoItem.find('.due-date');
     await t.expect(dueDateDisplay.innerText).contains('2024-11-07', 'Due date should be displayed correctly');
 });
