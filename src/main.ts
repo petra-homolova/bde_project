@@ -70,7 +70,6 @@ const renderTodos = (): void => {
     addRemoveButtonListener(li, todo.id); 
     addEditButtonListener(li, todo.id); 
     todoList.appendChild(li); 
-    darkModeToggle.addEventListener('click', toggleDarkMode);
     document.getElementById('clear-completed-btn')?.addEventListener('click', clearCompletedTodos);
 
     updateProgressBar();
@@ -245,3 +244,5 @@ const updateProgressBar = (): void => {
 const toggleDarkMode = (): void => {
   document.body.classList.toggle('dark-mode');
 };
+
+darkModeToggle.addEventListener('click', toggleDarkMode);
